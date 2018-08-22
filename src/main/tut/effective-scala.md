@@ -7,6 +7,17 @@ build-lists: true
 
 ---
 
+Inspired by:
+
+- [Effective ML -- Presentation by Yaron Minsky](https://blog.janestreet.com/effective-ml-video/)
+- [Effective Scala -- Style Guide by Marius Eriksen, Twitter Inc.](https://twitter.github.io/effectivescala/)
+- [Effective Java -- Book by Joshua Bloch](https://www.amazon.com/Effective-Java-3rd-Joshua-Bloch/dp/0134685997)
+- [Boundaries -- Presentation by Gary Bernhardt](https://www.destroyallsoftware.com/talks/boundaries)
+
+[.build-lists: false]
+
+---
+
 # Agenda
 - Why Scala?
 - (Type) Safety
@@ -14,30 +25,85 @@ build-lists: true
 - Imperative Shell
 - Best Practices
 
-[.build-lists: false]
-
 ---
 
 # Why Scala?
+
+---
+
+# Why Scala?  
 - JVM and Java Libraries
 - Sophisticated Type System
-- Functional (with little effort)
-- Approachable
+- Allows Functional Programming Techniques
+- Concise and Approachable
+
+---
+
+# JVM and Java Libraries
+- JVM Safety
+  - Sandbox untrusted code from the OS
+- Runtime Constraints
+- Battle-tested Java Libraries
+  - Especially important for security
+
+---
+
+# Sophisticated Type System
+- Statically Typed with Type Inference
+- Algebraic Data Types
+- Type Classes
+- Generics
+- Higher-Order Functions
+
+---
+
+# Functional Programming Techniques
+
+- Immutable Data Structures
+- Strong Library Support
+- Easy to Reason About
+- Scales Well
+- Inherent Safety Gains
+
+---
+
+# Concise and Approachable
+
+- Reduced Boilerplate
+- Familiar Syntax for many devs
+
+^ Dot-notation, function calls, method signatures,
+^ class definitions, etc.
+
+- "Fusion Approach" of OOP & FP
+- Acceptable Learning Curve
+
+---
+
+# [fit] Using Scala
+# [fit] Effectively
 
 ---
 
 # (Type) Safety
-- Illegal States
-  - Use the most specific types available
-    - Refined
+
+---
+
+# (Type) Safety
+
+- Use the most specific types available
+  - _Cats_: `NonEmptyList[A]`
+  - _Refined_: `NonNegativeInt`
   - Algebraic Data Types
-  - Phantom types?
+  - Phantom Types
 - If you feel like you're fighting the compiler, there's likely a better way
+
+^ Let the compiler hold you, and the next person, and the refactor effort accountable.
 
 ---
 
 > Make Illegal States Unrepresentable
-- Yaron Minsky
+-- Yaron Minsky
 
 [.footer: [Effective ML](https://blog.janestreet.com/effective-ml-video/)]
 
@@ -136,13 +202,37 @@ sendReminders(mixed)  // won't compile!
 ---
 
 # Functional Core
+
+---
+
+# Functional Core
 - Immutability -- why?
 - Referential Transparency -- why?
 - Higher order / Higher Kinded types -- why?
 - Total vs Partial Functions
 
-- Code is "Easy to Reason About"
-  - Most valuable in _concurrent_ code
+
+- What
+  - Are Functions?
+    - Deterministic
+    - Total
+    - Pure
+  - Referential Transparency (AKA substitution)
+- Why?
+  - Referential Transparency
+  - Code is Easy to Reason About
+    - _Concurrency_
+  - Code is Easy to Maintain
+- How?
+  - Effect vs Side-Effect
+
+---
+
+Pure Function
+  -> Referentially Transparent
+  -> Substitution Model
+  -> Local Reasoning
+
 ---
 
 # [fit] The End
@@ -216,8 +306,10 @@ divide(15, 0)
 _Pure_ Function
 
 ```tut
+import scala.util.Try
+
 case class DivideError
-def divide(num: Int, denom: Int): Either[Int] = {
+def divide(num: Int, denom: Int): Try[Int] = {
   Try(num / denom)
 }
 ```
@@ -260,57 +352,6 @@ divide(15, denom) match {
 
 [.footer: [Error Handling in Scala with FP](https://speakerdeck.com/jooohn/error-handling-in-scala-with-fp?slide=14)]
 
----
-
-```scala
-scalacOptions ++= Seq(
-  "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
-  "-encoding", "utf-8",                // Specify character encoding used by source files.
-  "-explaintypes",                     // Explain type errors in more detail.
-  "-feature",                          // Emit warning and location for usages of features that should be imported explicitly.
-  "-language:existentials",            // Existential types (besides wildcard types) can be written and inferred
-  "-language:experimental.macros",     // Allow macro definition (besides implementation and application)
-  "-language:higherKinds",             // Allow higher-kinded types
-  "-language:implicitConversions",     // Allow definition of implicit functions called views
-  "-unchecked",                        // Enable additional warnings where generated code depends on assumptions.
-  "-Xcheckinit",                       // Wrap field accessors to throw an exception on uninitialized access.
-  "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
-  "-Xfuture",                          // Turn on future language features.
-  "-Xlint:adapted-args",               // Warn if an argument list is modified to match the receiver.
-  "-Xlint:by-name-right-associative",  // By-name parameter of right associative operator.
-  "-Xlint:constant",                   // Evaluation of a constant arithmetic expression results in an error.
-  "-Xlint:delayedinit-select",         // Selecting member of DelayedInit.
-  "-Xlint:doc-detached",               // A Scaladoc comment appears to be detached from its element.
-  "-Xlint:inaccessible",               // Warn about inaccessible types in method signatures.
-  "-Xlint:infer-any",                  // Warn when a type argument is inferred to be `Any`.
-  "-Xlint:missing-interpolator",       // A string literal appears to be missing an interpolator id.
-  "-Xlint:nullary-override",           // Warn when non-nullary `def f()' overrides nullary `def f'.
-  "-Xlint:nullary-unit",               // Warn when nullary methods return Unit.
-  "-Xlint:option-implicit",            // Option.apply used implicit view.
-  "-Xlint:package-object-classes",     // Class or object defined in package object.
-  "-Xlint:poly-implicit-overload",     // Parameterized overloaded implicit methods are not visible as view bounds.
-  "-Xlint:private-shadow",             // A private field (or class parameter) shadows a superclass field.
-  "-Xlint:stars-align",                // Pattern sequence wildcard must align with sequence component.
-  "-Xlint:type-parameter-shadow",      // A local type parameter shadows a type already in scope.
-  "-Xlint:unsound-match",              // Pattern match may not be typesafe.
-  "-Yno-adapted-args",                 // Do not adapt an argument list (either by inserting () or creating a tuple) to match the receiver.
-  "-Ypartial-unification",             // Enable partial unification in type constructor inference
-  "-Ywarn-dead-code",                  // Warn when dead code is identified.
-  "-Ywarn-extra-implicit",             // Warn when more than one implicit parameter section is defined.
-  "-Ywarn-inaccessible",               // Warn about inaccessible types in method signatures.
-  "-Ywarn-infer-any",                  // Warn when a type argument is inferred to be `Any`.
-  "-Ywarn-nullary-override",           // Warn when non-nullary `def f()' overrides nullary `def f'.
-  "-Ywarn-nullary-unit",               // Warn when nullary methods return Unit.
-  "-Ywarn-numeric-widen",              // Warn when numerics are widened.
-  "-Ywarn-unused:implicits",           // Warn if an implicit parameter is unused.
-  "-Ywarn-unused:imports",             // Warn if an import selector is not referenced.
-  "-Ywarn-unused:locals",              // Warn if a local definition is unused.
-  "-Ywarn-unused:params",              // Warn if a value parameter is unused.
-  "-Ywarn-unused:patvars",             // Warn if a variable bound in a pattern is unused.
-  "-Ywarn-unused:privates",            // Warn if a private member is unused.
-  "-Ywarn-value-discard"               // Warn when non-Unit expression results are unused.
-)
-```
 
 ---
 
@@ -327,3 +368,15 @@ https://blog.janestreet.com/effective-ml-video/
 - Don't Be Puritanical About Purity
 
 ---
+
+References:
+- [Effective ML -- Presentation by Yaron Minsky](https://blog.janestreet.com/effective-ml-video/)
+- [Effective Scala -- Style Guide by Marius Eriksen, Twitter Inc.](https://twitter.github.io/effectivescala/)
+- [Effective Java -- Book by Joshua Bloch](https://www.amazon.com/Effective-Java-3rd-Joshua-Bloch/dp/0134685997)
+- [Boundaries -- Presentation by Gary Bernhardt](https://www.destroyallsoftware.com/talks/boundaries)
+- [Programming with Effects](https://na.scaladays.org/schedule/functional-programming-with-effects)
+- [Moving Beyond Defensive Coding](https://www.youtube.com/watch?v=k6QRI1a-xNU)
+- [Thinking Less with Scala](https://www.youtube.com/watch?v=k6QRI1a-xNU)
+- [FP to the Max](https://www.youtube.com/watch?v=sxudIMiOo68)
+- [Reddit Post](https://www.reddit.com/r/scala/comments/8ygjcq/can_someone_explain_to_me_the_benefits_of_io/)
+- [Error Handling in Scala with FP](https://speakerdeck.com/jooohn/error-handling-in-scala-with-fp?slide=14)

@@ -5,6 +5,8 @@ build-lists: true
 # Recommendations for a
 # Pleasant Scala Experience
 
+^ The goal of this document is to help engineers be consistent with code practices, help inform code reviews, and onboard new team members
+
 ---
 
 Inspired by:
@@ -23,7 +25,7 @@ Inspired by:
 - (Type) Safety
 - Functional Core
 - Imperative Shell
-- Best Practices
+- Recommended Practices
 
 ---
 
@@ -46,6 +48,8 @@ Inspired by:
 - Battle-tested Java Libraries
   - Especially important for security
 
+[.build-lists: false]
+
 ---
 
 # Sophisticated Type System
@@ -55,16 +59,21 @@ Inspired by:
 - Generics
 - Higher-Order Functions
 
+[.build-lists: false]
 ---
 
 # Functional Programming Techniques
 
-- Immutable Data Structures
-- Strong Library Support
 - Easy to Reason About
+- Immutable Data Structures
+
+^ case classes, collections, etc.
+
+- Strong Library Support
 - Scales Well
 - Inherent Safety Gains
 
+[.build-lists: false]
 ---
 
 # Concise and Approachable
@@ -78,6 +87,8 @@ Inspired by:
 - "Fusion Approach" of OOP & FP
 - Acceptable Learning Curve
 
+[.build-lists: false]
+
 ---
 
 # [fit] Using Scala
@@ -89,16 +100,138 @@ Inspired by:
 
 ---
 
-# (Type) Safety
+# Type Safety
 
 - Use the most specific types available
   - _Cats_: `NonEmptyList[A]`
-  - _Refined_: `NonNegativeInt`
-  - Algebraic Data Types
-  - Phantom Types
-- If you feel like you're fighting the compiler, there's likely a better way
+  - _Refined_: `Int Refined Positive`
+- When not available, create your own
+  - Algebraic Data Types -- `case class`es are cheap
+  - `extends AnyVal`, Phantom Types, etc.
+- Fighting the compiler? Is there a better approach?
 
-^ Let the compiler hold you, and the next person, and the refactor effort accountable.
+^ Let the compiler hold you, and the next person, and the refactor effort, accountable.
+
+---
+
+# Algebraic Data Types (Primer)
+
+[.footer: [Introduction to Algebraic Data Types in Scala](https://tpolecat.github.io/presentations/algebraic_types.html)]
+
+---
+
+# What do we mean by "algebraic?"
+> How many values of type `Nothing`?
+> How many values of type `Unit`?
+> How many values of type `Boolean`?
+> How many values of type `Byte`?
+> How many values of type `String`?
+
+---
+
+# What do we mean by "algebraic?"
+
+> How many values of type `Nothing`? → 0
+> How many values of type `Unit`? → 1
+> How many values of type `Boolean`? → 2
+> How many values of type `Byte`? → 256
+> How many values of type `String`? → many
+
+---
+
+# What do we mean by "algebraic?"
+
+> How many values of type `(Byte, Boolean)`?
+> How many values of type `(Byte, Unit)`?
+> How many values of type `(Byte, Byte)`?
+> How many values of type `(Byte, Boolean, Boolean)`?
+> How many values of type `(Boolean, String, Nothing)`?
+
+---
+
+# What do we mean by "algebraic?"
+
+> How many of type `(Byte, Boolean)`? → 2 × 256 = 512
+> How many of type `(Byte, Unit)`? → 256 × 1 = 256
+> How many of type `(Byte, Byte)`? → 256 × 256 = 65536
+> How many of type `(Byte, Boolean, Boolean)`? → 256 × 2 × 2 = 1024
+> How many of type `(Boolean, String, Nothing)`? → 2 × many × 0 = 0
+
+---
+
+# What do we mean by "algebraic?"
+
+> How many of type `(Byte, Boolean)`? → 2 × 256 = 512
+> How many of type `(Byte, Unit)`? → 256 × 1 = 256
+> How many of type `(Byte, Byte)`? → 256 × 256 = 65536
+> How many of type `(Byte, Boolean, Boolean)`? → 256 × 2 × 2 = 1024
+> How many of type `(Boolean, String, Nothing)`? → 2 × many × 0 = 0
+
+Product types! This _and_ That
+
+---
+
+## Product types
+
+### Tuples!
+
+```scala
+type Person = (String, Int)
+```
+
+### Classes!
+
+```scala
+case class ScalaPerson(name: String, age: Int)
+
+class JavaPerson {
+  final String name;
+  final Int age;
+}
+```
+
+---
+
+# What do we mean by "algebraic?"
+
+> How many values of type `Byte` or `Boolean`?
+> How many values of type `Boolean` or `Unit`?
+> How many values of type `(Byte, Boolean)` or `Boolean`?
+> How many values of type `Boolean` or `(String, Nothing)`?
+
+---
+
+# What do we mean by "algebraic?"
+
+> How many of type `Byte` or `Boolean`? → 2 + 256 = 258
+> How many of type `Boolean` or `Unit`? → 2 + 1 = 3
+> How many of type `(Byte, Boolean)` or `Boolean`? → (256 × 2) + 2 = 514
+> How many of type `Boolean` or `(String, Nothing)`? → 2 + (many × 0) = 2
+
+---
+
+# What do we mean by "algebraic?"
+
+> How many of type `Byte` or `Boolean`? → 2 + 256 = 258
+> How many of type `Boolean` or `Unit`? → 2 + 1 = 3
+> How many of type `(Byte, Boolean)` or `Boolean`? → (256 × 2) + 2 = 514
+> How many of type `Boolean` or `(String, Nothing)`? → 2 + (many × 0) = 2
+
+Sum types! This _or_ That
+
+---
+
+### Option
+
+```scala
+val maybeByte: Option[Byte] = Some(0x07)
+```
+
+### Either
+
+```scala
+val test: Either[String, Byte] = Left("Could not read byte")
+```
 
 ---
 
@@ -201,99 +334,179 @@ sendReminders(mixed)  // won't compile!
 
 ---
 
-# Functional Core
+> Functional core, imperative shell
+-- Gary Bernhardt
 
 ---
 
 # Functional Core
-- Immutability -- why?
-- Referential Transparency -- why?
-- Higher order / Higher Kinded types -- why?
+
+---
+
+# Functional Programming Concepts
+
+- Immutability
+- Higher Order Functions / Higher Kinded types
 - Total vs Partial Functions
+- Referential Transparency
 
-
-- What
-  - Are Functions?
-    - Deterministic
-    - Total
-    - Pure
-  - Referential Transparency (AKA substitution)
-- Why?
-  - Referential Transparency
-  - Code is Easy to Reason About
-    - _Concurrency_
-  - Code is Easy to Maintain
-- How?
-  - Effect vs Side-Effect
+> We reason about our programs by substitution.
+-- Rob Norris
 
 ---
 
-Pure Function
-  -> Referentially Transparent
-  -> Substitution Model
-  -> Local Reasoning
+# Referential Transparency
 
----
+Are these the same program?
 
-# [fit] The End
-# [fit] of the World
+```scala
+// program 1
+val a = compute(5)
+(a, a)
 
----
-
-# Imperative Shell ("End of the World")
-- Http
-- Database
-- Logging
-- Etc.
-
----
-
-# [fit] Best Practices
-
----
-
-### Prefer `List` to `Seq`
-
----
-
-### Avoid `return`
-
----
-
-### Prefer return type annotations
-- required for recursion
-- often helps type inference
-
----
-
-### Prefer Explicit conversions
-Can be _provided_ by `implicit`s
-
----
-
-(Im)pure Functions
-
-```tut
-def divide(num: Int, denom: Int): Int = ???
+// program 2
+(compute(5), compute(5))
 ```
 
-[.footer: [Thinking Less with Scala](https://www.youtube.com/watch?v=k6QRI1a-xNU) - Daniel Sivan]
+[.footer: [Programming with Effects](https://na.scaladays.org/schedule/functional-programming-with-effects)]
 
 ---
 
-(Im)pure Functions
+# Referential Transparency
+
+Are these the same program?
+
+```scala
+// program 1
+val a = compute(5)
+(a, a)
+
+// program 2
+(compute(5), compute(5))
+```
+
+It depends...
+
+[.footer: [Programming with Effects](https://na.scaladays.org/schedule/functional-programming-with-effects)]
+
+---
+
+# Referential Transparency
+
+Are these the same program?
+
+```scala
+// program 1
+val a = compute(5)
+(a, a)
+
+// program 2
+(compute(5), compute(5))
+```
+
+For functional programming, the answer is always YES.
+
+[.footer: [Programming with Effects](https://na.scaladays.org/schedule/functional-programming-with-effects)]
+
+---
+
+# Referential Transparency
+
+- Every expression is either referentially transparent, or
+- it is a **side-effect**.
+- This is a **syntactic property of programs**
+
+^ Can we perform substitution?
+
+[.footer: [Programming with Effects](https://na.scaladays.org/schedule/functional-programming-with-effects)]
+
+---
+
+# Referential Transparency
+
+- Functions must be:
+  - Deterministic
+  - Total
+  - Pure
+
+---
+
+# Referential Transparency
+
+By counterexample: _Determinism_
 
 ```tut
-def divide(num: Int, denom: Int): Int = {
-  num / denom
+import java.security.SecureRandom
+
+val rand = new SecureRandom
+rand.nextInt(100)
+rand.nextInt(100)
+```
+
+---
+
+# Referential Transparency
+
+By counterexample: _Totality_
+
+```tut
+def divide(num: Int, denom: Int): Int = num / denom
+```
+```tut:fail
+divide(15, 0)
+```
+
+---
+
+# Referential Transparency
+
+By counterexample: _Pure_
+
+```tut
+def reportedIncrement(x: Int): Int = {
+  println(s"Was $x, is now ${x + 1}")
+  x + 1
 }
+val a = reportedIncrement(5)
+(a, a)
+(reportedIncrement(5), reportedIncrement(5))
 ```
-
-[.footer: [Thinking Less with Scala](https://www.youtube.com/watch?v=k6QRI1a-xNU) - Daniel Sivan]
 
 ---
 
-(Im)pure Functions
+# Referential Transparency
+
+- Functions must be:
+  - Deterministic
+  - Total
+  - Pure
+- How do we do anything useful?
+
+[.build-lists: false]
+---
+
+# Referential Transparency
+
+- Functions must be:
+  - Deterministic
+  - Total
+  - Pure
+- How do we do anything useful?
+  - _Effects_
+
+[.build-lists: false]
+---
+
+# Effect vs Side-Effect
+
+- Effects are **good**
+- Side-effects are **bugs**
+
+[.footer: [Programming with Effects](https://na.scaladays.org/schedule/functional-programming-with-effects)]
+
+---
+
+Partial Function
 
 ```tut:fail
 divide(15, 0)
@@ -303,12 +516,11 @@ divide(15, 0)
 
 ---
 
-_Pure_ Function
+_Total_ Function
 
 ```tut
-import scala.util.Try
+import scala.util._
 
-case class DivideError
 def divide(num: Int, denom: Int): Try[Int] = {
   Try(num / denom)
 }
@@ -318,7 +530,7 @@ def divide(num: Int, denom: Int): Try[Int] = {
 
 ---
 
-_Pure_ Function
+_Total_ Function
 
 ```tut
 divide(15, 0)
@@ -328,7 +540,7 @@ divide(15, 0)
 
 ---
 
-_Pure_ Function
+_Total_ Function
 
 ```tut
 val denom = 3
@@ -342,6 +554,8 @@ divide(15, denom) match {
 
 ---
 
+# Functional Error Handling
+
 | Representation | When to use |
 |----------------|-------------|
 | Exception | Avoid |
@@ -352,31 +566,205 @@ divide(15, denom) match {
 
 [.footer: [Error Handling in Scala with FP](https://speakerdeck.com/jooohn/error-handling-in-scala-with-fp?slide=14)]
 
+---
+
+# Functional Error Handling
+
+~~Try~~, `Either.catchNonFatal` from _Cats_
+
+| Representation | When to use |
+|----------------|-------------|
+| Exception | Avoid |
+| Option | Modeling Absence |
+| Either | Capturing Throwable |
+| Either | Sequential Errors |
+| Validated | Parallel Errors |
+
+[.footer: [Error Handling in Scala with FP](https://speakerdeck.com/jooohn/error-handling-in-scala-with-fp?slide=14)]
 
 ---
 
-### Favor Code Readers Over Code Writers
+# Effects
 
+<br>
 
+# `F[A]`
 
+> This is a program in F that computes a value of type A
 
-https://blog.janestreet.com/effective-ml-video/
+[.footer: [Programming with Effects](https://na.scaladays.org/schedule/functional-programming-with-effects)]
+
+---
+
+# Imperative Shell
+
+---
+
+# Imperative Shell
+_"End of the World"_
+
+- Http
+- Database
+- Logging
+- Etc.
+
+---
+
+# `cats.effect.IO`
+
+---
+
+# `cats.effect.IO`
+
+```tut
+import cats.effect.IO
+
+def delayedIncrement(x: Int): IO[Int] = IO {
+  println(s"Was $x, is now ${x + 1}")
+  x + 1
+}
+```
+
+---
+
+# `cats.effect.IO`
+
+```tut
+// program 1
+val a = delayedIncrement(5)
+(a, a)
+
+// program 2
+(delayedIncrement(5), delayedIncrement(5))
+```
+
+---
+
+# [fit] The End
+# [fit] of the World
+
+---
+
+# `cats.effect.IO`
+
+```tut
+val a = delayedIncrement(5)
+a.unsafeRunSync() // "end of the world"
+
+a.flatMap(delayedIncrement).unsafeRunSync // "end of the world"
+```
+
+---
+
+# `cats.effect.IO`
+
+```tut
+def delayedDecrement(x: Int): IO[Int] = IO {
+  println(s"Was $x, is now ${x - 1}")
+  x - 1
+}
+
+val program = for {
+  x <- delayedIncrement(5)
+  y <- delayedIncrement(x)
+  z <- delayedDecrement(y)
+} yield z
+```
+
+---
+
+# `cats.effect.IO`
+
+```tut
+program // just a _value_
+
+program.unsafeRunSync // "end of the world"
+```
+
+---
+
+# [fit] Best Practices
+
+---
+
+# Favor Code Readers Over Code Writers
 
 - Capture invariance in types rather than in the logic surrounding the types
 - Make Common Errors Obvious
 - Avoid Complex Type Hackery
 - Don't Be Puritanical About Purity
 
+[.footer: [Effective ML -- Yaron Minsky](https://blog.janestreet.com/effective-ml-video/)]
+
+---
+
+# Style Suggestions
+- Prefer `List` to `Seq`
+- Avoid `return`
+
+^ Almost everything is an expression that returns a value
+
+- Prefer return type annotations
+  - Required for recursion
+  - Often helps type inference and compile times
+- Prefer Explicit conversions
+  - Can be _provided_ by `implicit`s
+
+---
+
+# A Pattern for Implicits
+
+```scala
+case class Email(email:  String) extends AnyVal
+case class Name(name: String) extends AnyVal
+
+case class Person(row: (Email, Name)) extends AnyVal {
+  def email: Email = row._1
+  def name: Name = row._2
+}
+```
+
+[.footer: [A Pattern for Implicits](https://toznysecurity.atlassian.net/wiki/spaces/TOZ/blog/2016/07/11/18907137/A+Pattern+for+Implicits)]
+
+---
+
+# A Pattern for Implicits
+
+```scala
+object Person {
+  implicit def toPerson(arg: (String, String)): Person = Person((Email(arg._1), Name(arg._2)))
+}
+```
+
+[.footer: [A Pattern for Implicits](https://toznysecurity.atlassian.net/wiki/spaces/TOZ/blog/2016/07/11/18907137/A+Pattern+for+Implicits)]
+
+---
+
+# A Pattern for Implicits
+
+```scala
+object useImplicit {
+  import Person
+
+  def fromRow(row: (String, String)): Person = row
+}
+```
+
+[.footer: [A Pattern for Implicits](https://toznysecurity.atlassian.net/wiki/spaces/TOZ/blog/2016/07/11/18907137/A+Pattern+for+Implicits)]
+
 ---
 
 References:
-- [Effective ML -- Presentation by Yaron Minsky](https://blog.janestreet.com/effective-ml-video/)
-- [Effective Scala -- Style Guide by Marius Eriksen, Twitter Inc.](https://twitter.github.io/effectivescala/)
-- [Effective Java -- Book by Joshua Bloch](https://www.amazon.com/Effective-Java-3rd-Joshua-Bloch/dp/0134685997)
-- [Boundaries -- Presentation by Gary Bernhardt](https://www.destroyallsoftware.com/talks/boundaries)
-- [Programming with Effects](https://na.scaladays.org/schedule/functional-programming-with-effects)
-- [Moving Beyond Defensive Coding](https://www.youtube.com/watch?v=k6QRI1a-xNU)
-- [Thinking Less with Scala](https://www.youtube.com/watch?v=k6QRI1a-xNU)
-- [FP to the Max](https://www.youtube.com/watch?v=sxudIMiOo68)
-- [Reddit Post](https://www.reddit.com/r/scala/comments/8ygjcq/can_someone_explain_to_me_the_benefits_of_io/)
-- [Error Handling in Scala with FP](https://speakerdeck.com/jooohn/error-handling-in-scala-with-fp?slide=14)
+- [Effective ML -- Yaron Minsky](https://blog.janestreet.com/effective-ml-video/)
+- [Effective Scala -- Marius Eriksen, Twitter Inc.](https://twitter.github.io/effectivescala/)
+- [Effective Scala: Reloaded! -- ](https://www.youtube.com/watch?v=pAc-0TmnlcE)
+- [Effective Java -- Joshua Bloch](https://www.amazon.com/Effective-Java-3rd-Joshua-Bloch/dp/0134685997)
+- [Boundaries -- Gary Bernhardt](https://www.destroyallsoftware.com/talks/boundaries)
+- [Programming with Effects -- Rob Norris](https://na.scaladays.org/schedule/functional-programming-with-effects)
+- [Introduction to Algebraic Data Types in Scala -- Rob Norris](https://tpolecat.github.io/presentations/algebraic_types.html)
+- [Moving Beyond Defensive Coding -- Changlin Li](https://www.youtube.com/watch?v=Csj3lzsr0_I)
+- [Thinking Less with Scala -- Daniel Sivan](https://www.youtube.com/watch?v=k6QRI1a-xNU)
+- [FP to the Max -- John De Goes](https://www.youtube.com/watch?v=sxudIMiOo68)
+- [Benefits of IO? -- Reddit Post](https://www.reddit.com/r/scala/comments/8ygjcq/can_someone_explain_to_me_the_benefits_of_io/)
+- [Error Handling in Scala with FP -- Jun Tomioka](https://speakerdeck.com/jooohn/error-handling-in-scala-with-fp?slide=14)
+- [A Pattern for Implicits -- Justin Bailey](https://toznysecurity.atlassian.net/wiki/spaces/TOZ/blog/2016/07/11/18907137/A+Pattern+for+Implicits)

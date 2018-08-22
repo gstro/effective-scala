@@ -20,19 +20,19 @@ build-lists: true
 
 # Why Scala?
 - JVM and Java Libraries
-- Strong Type System
-- Functional (with some effort)
+- Sophisticated Type System
+- Functional (with little effort)
 - Approachable
 
 ---
 
 # (Type) Safety
 - Illegal States
-  - Refined
-- Algebraic Data Types
+  - Use the most specific types available
+    - Refined
+  - Algebraic Data Types
+  - Phantom types?
 - If you feel like you're fighting the compiler, there's likely a better way
-- Phantom types?
-- Use the most specific types available
 
 ---
 
@@ -46,61 +46,103 @@ build-lists: true
 # Make Illegal States Unrepresentable
 
 ```tut
-case class LibraryBook(isbn: String, currentLibrary: Option[String], dueDate: Option[Long], checkedOutBy: Option[String])
+case class LibraryBook(isbn: Int, atLibrary: Option[String], dueDate: Option[Long], checkedOutBy: Option[String])
 
-def checkOut(book: LibraryBook, person: String): LibraryBook = ???
+def checkOut(book: LibraryBook, cardHolder: String): LibraryBook = {
+  LibraryBook(book.isbn, None, Some(System.currentTimeMillis()), Some(cardHolder))
+}
+```
 
-def remind(cardHolder: String, isbn: String): String = {
+---
+
+# Make Illegal States Unrepresentable
+
+```tut
+val book1 = LibraryBook(123, Some("Multnomah County"), None, None)
+val checkedOut = checkOut(book1, "Alice")
+```
+
+---
+
+# Make Illegal States Unrepresentable
+
+```tut
+def remind(cardHolder: String, isbn: Int): String = {
   s"Hey $cardHolder! Give us back $isbn!"
 }
 
 def sendReminders(books: List[LibraryBook]): List[String] = ???
 ```
-
 ---
 
-# `map`?
+# `collect`
 
 ```tut
+val books = List(checkedOut)
 def sendReminders(books: List[LibraryBook]): List[String] = {
-  books.map {
-    case LibraryBook(isbn, _, Some(date), Some(person)) if date < System.currentTimeMillis() => remind(person, isbn)
-    case _ => ???
+  books.collect { case LibraryBook(isbn, _, Some(date), Some(person))
+    if date < System.currentTimeMillis() => remind(person, isbn)
   }
 }
+sendReminders(books)
 ```
 
 ---
+
+# Invalid Data?
 
 ```tut
-def sendReminders(books: List[LibraryBook]): List[String] = {
-  books.filter { b =>
-    b. n, _, Some(date), Some(person)) if date < System.currentTimeMillis() => remind(person, isbn)
-    case _ => ???
-  }
-}
+val invalid = LibraryBook(321, None, Some(System.currentTimeMillis()), None) // checkout book with no person?
+val mixed = List(checkedOut, invalid)
+sendReminders(mixed)  // silent failure!
 ```
 
 ---
 
-# `flatMap`?
+# Better Types
 
 ```tut
-def sendReminders(books: List[LibraryBook]) = {
-  books.flatMap {
-    case LibraryBook(isbn, _, Some(date), Some(person)) if date < System.currentTimeMillis() => Some(remind(person, isbn)
-    case _ => ???
-  }
+case class LibraryBook(isbn: Int, atLibrary: String)
+case class CheckedOutBook(isbn: Int, dueDate: Long, checkedOutBy: String)
+
+def checkOut(book: LibraryBook, cardHolder: String): CheckedOutBook = {
+  CheckedOutBook(book.isbn, System.currentTimeMillis(), cardHolder)
 }
 ```
 
 ---
+
+# Better Types
+
+```tut
+val book2 = LibraryBook(345, "Multnomah County")
+val checkedOut2 = checkOut(book2, "Bob")
+def sendReminders(books: List[CheckedOutBook]): List[String] = {
+  books.map(b => remind(b.checkedOutBy, b.isbn))
+}
+```
+
+---
+
+# Invalid Data?
+
+```tut
+val mixed = List(book2, checkedOut2)  // bad state
+```
+```tut:fail
+sendReminders(mixed)  // won't compile!
+```
+
+---
+
 # Functional Core
-- Referential Transparency
-- Code is Easy to Reason About
-  - Most valuable in _concurrent_ code
-- Total functions
+- Immutability -- why?
+- Referential Transparency -- why?
+- Higher order / Higher Kinded types -- why?
+- Total vs Partial Functions
 
+- Code is "Easy to Reason About"
+  - Most valuable in _concurrent_ code
 ---
 
 # [fit] The End

@@ -640,6 +640,33 @@ val a = delayedIncrement(5)
 
 ---
 
+# vs `scala.concurrent.Future`
+
+```tut
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
+def futureIncrement(x: Int): Future[Int] = Future {
+  println(s"Was $x, is now ${x + 1}")
+  x + 1
+}
+```
+
+---
+
+# vs `scala.concurrent.Future`
+
+```tut
+// program 1
+val a = futureIncrement(5)
+(a, a)
+
+// program 2
+(futureIncrement(5), futureIncrement(5))
+```
+
+---
+
 # [fit] The End
 # [fit] of the World
 
@@ -715,7 +742,7 @@ program.unsafeRunSync // "end of the world"
 References:
 - [Effective ML -- Yaron Minsky](https://blog.janestreet.com/effective-ml-video/)
 - [Effective Scala -- Marius Eriksen, Twitter Inc.](https://twitter.github.io/effectivescala/)
-- [Effective Scala: Reloaded! -- ](https://www.youtube.com/watch?v=pAc-0TmnlcE)
+- [Effective Scala: Reloaded! -- Mirco Dotta](https://www.youtube.com/watch?v=pAc-0TmnlcE)
 - [Effective Java -- Joshua Bloch](https://www.amazon.com/Effective-Java-3rd-Joshua-Bloch/dp/0134685997)
 - [Boundaries -- Gary Bernhardt](https://www.destroyallsoftware.com/talks/boundaries)
 - [Programming with Effects -- Rob Norris](https://na.scaladays.org/schedule/functional-programming-with-effects)

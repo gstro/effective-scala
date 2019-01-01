@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="effective-scala-build [file:/Users/gregtozny/local/effective-scala/]" external.linked.project.path="$MODULE_DIR$/../../project" external.root.project.path="$MODULE_DIR$/../.." external.system.id="SBT" sbt.imports="_root_.sbt.Keys._, _root_.sbt.ScriptedPlugin.autoImport._, _root_.org.ensime.EnsimeCoursierPlugin.autoImport._, _root_.org.ensime.EnsimeExtrasPlugin.autoImport._, _root_.org.ensime.EnsimePlugin.autoImport._, _root_.tut.TutPlugin.autoImport._, _root_.sbt._, _root_.sbt.plugins.IvyPlugin, _root_.sbt.plugins.JvmPlugin, _root_.sbt.plugins.CorePlugin, _root_.sbt.ScriptedPlugin, _root_.sbt.plugins.SbtPlugin, _root_.sbt.plugins.JUnitXmlReportPlugin, _root_.sbt.plugins.Giter8TemplatePlugin, _root_.org.ensime.EnsimeCoursierPlugin, _root_.org.ensime.EnsimeExtrasPlugin, _root_.org.ensime.EnsimePlugin, _root_.tut.TutPlugin, _root_.scala.xml.{TopScope=&gt;SUB:DOLLARscope}" sbt.resolvers="https://repo1.maven.org/maven2/|maven|public, file:/Users/gregtozny/.sbt/preloaded/|maven|local-preloaded, http://dl.bintray.com/tpolecat/maven|maven|tpolecat, /Users/gregtozny/.ivy2/cache|ivy|Local cache" type="SBT_MODULE" version="4">
+<module external.linked.project.id="effective-scala-build [file:/Users/Molo/Local/effective-scala/]" external.linked.project.path="$MODULE_DIR$/../../project" external.root.project.path="$MODULE_DIR$/../.." external.system.id="SBT" sbt.imports="_root_.sbt.Keys._, _root_.sbt.ScriptedPlugin.autoImport._, _root_.mdoc.DocusaurusPlugin.autoImport._, _root_.mdoc.MdocPlugin.autoImport._, _root_.sbt._, _root_.sbt.plugins.IvyPlugin, _root_.sbt.plugins.JvmPlugin, _root_.sbt.plugins.CorePlugin, _root_.sbt.ScriptedPlugin, _root_.sbt.plugins.SbtPlugin, _root_.sbt.plugins.JUnitXmlReportPlugin, _root_.sbt.plugins.Giter8TemplatePlugin, _root_.mdoc.DocusaurusPlugin, _root_.mdoc.MdocPlugin, _root_.scala.xml.{TopScope=&gt;SUB:DOLLARscope}" sbt.resolvers="https://repo1.maven.org/maven2/|maven|public, http://repo.typesafe.com/typesafe/releases|maven|typesafe-releases, /Users/Molo/.ivy2/cache|ivy|Local cache" type="SBT_MODULE" version="4">
   <component name="NewModuleRootManager">
     <output url="file://$MODULE_DIR$/../../project/target/idea-classes" />
     <output-test url="file://$MODULE_DIR$/../../project/target/idea-test-classes" />
@@ -14,10 +14,8 @@
     <orderEntry type="module-library">
       <library name="sbt: sbt-and-plugins">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang.modules/scala-xml_2.12/bundles/scala-xml_2.12-1.0.6.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/scala_2.12/sbt_1.0/com.dwijnand/sbt-compat/jars/sbt-compat-1.0.0.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/scala_2.12/sbt_1.0/org.ensime/sbt-ensime/jars/sbt-ensime-2.5.1.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/scala_2.12/sbt_1.0/org.tpolecat/tut-plugin/jars/tut-plugin-0.6.7.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.jsoup/jsoup/jars/jsoup-1.11.3.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/scala_2.12/sbt_1.0/org.scalameta/sbt-mdoc/jars/sbt-mdoc-1.1.1.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.12.6/lib/jline.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.12.6/lib/scala-compiler.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.12.6/lib/scala-library.jar!/" />
@@ -111,6 +109,6 @@
   <component name="SbtModule">
     <option name="buildForId" value="effective-scala" />
     <option name="buildForURI" value="file:$MODULE_DIR$/../../" />
-    <option name="imports" value="_root_.sbt.Keys._, _root_.sbt.ScriptedPlugin.autoImport._, _root_.org.ensime.EnsimeCoursierPlugin.autoImport._, _root_.org.ensime.EnsimeExtrasPlugin.autoImport._, _root_.org.ensime.EnsimePlugin.autoImport._, _root_.tut.TutPlugin.autoImport._, _root_.sbt._, _root_.sbt.plugins.IvyPlugin, _root_.sbt.plugins.JvmPlugin, _root_.sbt.plugins.CorePlugin, _root_.sbt.ScriptedPlugin, _root_.sbt.plugins.SbtPlugin, _root_.sbt.plugins.JUnitXmlReportPlugin, _root_.sbt.plugins.Giter8TemplatePlugin, _root_.org.ensime.EnsimeCoursierPlugin, _root_.org.ensime.EnsimeExtrasPlugin, _root_.org.ensime.EnsimePlugin, _root_.tut.TutPlugin, _root_.scala.xml.{TopScope=&gt;SUB:DOLLARscope}" />
+    <option name="imports" value="_root_.sbt.Keys._, _root_.sbt.ScriptedPlugin.autoImport._, _root_.mdoc.DocusaurusPlugin.autoImport._, _root_.mdoc.MdocPlugin.autoImport._, _root_.sbt._, _root_.sbt.plugins.IvyPlugin, _root_.sbt.plugins.JvmPlugin, _root_.sbt.plugins.CorePlugin, _root_.sbt.ScriptedPlugin, _root_.sbt.plugins.SbtPlugin, _root_.sbt.plugins.JUnitXmlReportPlugin, _root_.sbt.plugins.Giter8TemplatePlugin, _root_.mdoc.DocusaurusPlugin, _root_.mdoc.MdocPlugin, _root_.scala.xml.{TopScope=&gt;SUB:DOLLARscope}" />
   </component>
 </module>

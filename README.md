@@ -3,12 +3,12 @@ Suggestions for a more pleasant Scala experience.
 
 ### Format and Presentation
 
-This project uses [tut](https://tpolecat.github.io/tut) to interpret Scala code
-and capture REPL output into markdown. The main markdown file is formatted to be
-presented with [Deckset](https://www.deckset.com/).
+This project uses [mdoc](https://scalameta.org/mdoc/) to interpret Scala code
+and capture program output into markdown. The main markdown file is formatted
+to be presented with [Deckset](https://www.deckset.com/).
 
-Run `sbt tut` at the root, then use Deckset or some other Markdown presentation
-tool to present the generated `target/scala-2.12/tut/effective-scala.md`.
+Run `sbt mdoc` at the root, then use **Deckset** or some other Markdown
+presentation tool to present the generated `target/mdoc/effective-scala.md`.
 
 ### Resources
 

@@ -33,7 +33,7 @@ Inspired by:
 
 ---
 
-# Why Scala?  
+# Why Scala?
 - JVM and Java Libraries
 - Sophisticated Type System
 - Allows Functional Programming Techniques
@@ -244,7 +244,7 @@ val test: Either[String, Byte] = Left("Could not read byte")
 
 # Make Illegal States Unrepresentable
 
-```tut
+```scala mdoc
 case class LibraryBook(isbn: Int, atLibrary: Option[String], dueDate: Option[Long], checkedOutBy: Option[String])
 
 def checkOut(book: LibraryBook, cardHolder: String): LibraryBook = {
@@ -256,7 +256,7 @@ def checkOut(book: LibraryBook, cardHolder: String): LibraryBook = {
 
 # Make Illegal States Unrepresentable
 
-```tut
+```scala mdoc
 val book1 = LibraryBook(123, Some("Multnomah County"), None, None)
 val checkedOut = checkOut(book1, "Alice")
 ```
@@ -265,46 +265,46 @@ val checkedOut = checkOut(book1, "Alice")
 
 # Make Illegal States Unrepresentable
 
-```tut
+```scala mdoc
 def remind(cardHolder: String, isbn: Int): String = {
   s"Hey $cardHolder! Give us back $isbn!"
 }
 
-def sendReminders(books: List[LibraryBook]): List[String] = ???
+def sendRemindersStub(books: List[LibraryBook]): List[String] = ???
 ```
 ---
 
 # `collect`
 
-```tut
+```scala mdoc
 val books = List(checkedOut)
-def sendReminders(books: List[LibraryBook]): List[String] = {
+def sendReminders1(books: List[LibraryBook]): List[String] = {
   books.collect { case LibraryBook(isbn, _, Some(date), Some(person))
     if date < System.currentTimeMillis() => remind(person, isbn)
   }
 }
-sendReminders(books)
+sendReminders1(books)
 ```
 
 ---
 
 # Invalid Data?
 
-```tut
+```scala mdoc
 val invalid = LibraryBook(321, None, Some(System.currentTimeMillis()), None) // checkout book with no person?
-val mixed = List(checkedOut, invalid)
-sendReminders(mixed)  // silent failure!
+val mixed1 = List(checkedOut, invalid)
+sendReminders1(mixed1)  // silent failure!
 ```
 
 ---
 
 # Better Types
 
-```tut
-case class LibraryBook(isbn: Int, atLibrary: String)
+```scala mdoc
+case class AtLibraryBook(isbn: Int, atLibrary: String)
 case class CheckedOutBook(isbn: Int, dueDate: Long, checkedOutBy: String)
 
-def checkOut(book: LibraryBook, cardHolder: String): CheckedOutBook = {
+def checkOut(book: AtLibraryBook, cardHolder: String): CheckedOutBook = {
   CheckedOutBook(book.isbn, System.currentTimeMillis(), cardHolder)
 }
 ```
@@ -313,10 +313,10 @@ def checkOut(book: LibraryBook, cardHolder: String): CheckedOutBook = {
 
 # Better Types
 
-```tut
-val book2 = LibraryBook(345, "Multnomah County")
+```scala mdoc
+val book2 = AtLibraryBook(345, "Multnomah County")
 val checkedOut2 = checkOut(book2, "Bob")
-def sendReminders(books: List[CheckedOutBook]): List[String] = {
+def sendReminders2(books: List[CheckedOutBook]): List[String] = {
   books.map(b => remind(b.checkedOutBy, b.isbn))
 }
 ```
@@ -325,11 +325,11 @@ def sendReminders(books: List[CheckedOutBook]): List[String] = {
 
 # Invalid Data?
 
-```tut
-val mixed = List(book2, checkedOut2)  // bad state
+```scala mdoc
+val mixed2 = List(book2, checkedOut2)  // bad state
 ```
-```tut:fail
-sendReminders(mixed)  // won't compile!
+```scala mdoc:fail
+sendReminders2(mixed2)  // won't compile!
 ```
 
 ---
@@ -435,7 +435,7 @@ For functional programming, the answer is always YES.
 
 By counterexample: _Determinism_
 
-```tut
+```scala mdoc
 import java.security.SecureRandom
 
 val rand = new SecureRandom
@@ -449,10 +449,10 @@ rand.nextInt(100)
 
 By counterexample: _Totality_
 
-```tut
+```scala mdoc
 def divide(num: Int, denom: Int): Int = num / denom
 ```
-```tut:fail
+```scala mdoc:crash
 divide(15, 0)
 ```
 
@@ -462,7 +462,7 @@ divide(15, 0)
 
 By counterexample: _Pure_
 
-```tut
+```scala mdoc
 def reportedIncrement(x: Int): Int = {
   println(s"Was $x, is now ${x + 1}")
   x + 1
@@ -508,7 +508,7 @@ val a = reportedIncrement(5)
 
 Partial Function
 
-```tut:fail
+```scala mdoc:crash
 divide(15, 0)
 ```
 
@@ -518,10 +518,10 @@ divide(15, 0)
 
 _Total_ Function
 
-```tut
+```scala mdoc
 import scala.util._
 
-def divide(num: Int, denom: Int): Try[Int] = {
+def safeDivide(num: Int, denom: Int): Try[Int] = {
   Try(num / denom)
 }
 ```
@@ -532,8 +532,8 @@ def divide(num: Int, denom: Int): Try[Int] = {
 
 _Total_ Function
 
-```tut
-divide(15, 0)
+```scala mdoc
+safeDivide(15, 0)
 ```
 
 [.footer: [Thinking Less with Scala](https://www.youtube.com/watch?v=k6QRI1a-xNU) - Daniel Sivan]
@@ -542,11 +542,13 @@ divide(15, 0)
 
 _Total_ Function
 
-```tut
+```scala mdoc
 val denom = 3
-divide(15, denom) match {
-  case Success(num) => List.fill(denom)(s"$num for you").mkString(", and ")
-  case Failure(err) => err.getMessage
+safeDivide(15, denom) match {
+  case Success(num) =>
+    List.fill(denom)(s"$num for you").mkString(", and ")
+  case Failure(err) =>
+    err.getMessage
 }
 ```
 
@@ -616,7 +618,7 @@ _"End of the World"_
 
 # `cats.effect.IO`
 
-```tut
+```scala mdoc:reset
 import cats.effect.IO
 
 def delayedIncrement(x: Int): IO[Int] = IO {
@@ -629,7 +631,7 @@ def delayedIncrement(x: Int): IO[Int] = IO {
 
 # `cats.effect.IO`
 
-```tut
+```scala mdoc
 // program 1
 val a = delayedIncrement(5)
 (a, a)
@@ -642,7 +644,7 @@ val a = delayedIncrement(5)
 
 # vs `scala.concurrent.Future`
 
-```tut
+```scala mdoc
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -656,10 +658,10 @@ def futureIncrement(x: Int): Future[Int] = Future {
 
 # vs `scala.concurrent.Future`
 
-```tut
+```scala mdoc
 // program 1
-val a = futureIncrement(5)
-(a, a)
+val b = futureIncrement(5)
+(b, b)
 
 // program 2
 (futureIncrement(5), futureIncrement(5))
@@ -674,18 +676,18 @@ val a = futureIncrement(5)
 
 # `cats.effect.IO`
 
-```tut
-val a = delayedIncrement(5)
-a.unsafeRunSync() // "end of the world"
+```scala mdoc
+val prog = delayedIncrement(5)
+prog.unsafeRunSync() // "end of the world"
 
-a.flatMap(delayedIncrement).unsafeRunSync // "end of the world"
+prog.flatMap(delayedIncrement).unsafeRunSync // "end of the world"
 ```
 
 ---
 
 # `cats.effect.IO`
 
-```tut
+```scala mdoc
 def delayedDecrement(x: Int): IO[Int] = IO {
   println(s"Was $x, is now ${x - 1}")
   x - 1
@@ -702,7 +704,7 @@ val program = for {
 
 # `cats.effect.IO`
 
-```tut
+```scala mdoc
 program // just a _value_
 
 program.unsafeRunSync // "end of the world"

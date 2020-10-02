@@ -10,7 +10,7 @@ to be presented with [Deckset](https://www.deckset.com/).
 Run `sbt mdoc` at the root, then use **Deckset** or some other Markdown
 presentation tool to present the generated `target/mdoc/effective-scala.md`.
 
-A PDF of the slides can be found at the repo root [here]() 
+A PDF of the slides can be found at the repo root [here](effective-scala.pdf) 
 
 ### Resources
 

@@ -10,6 +10,8 @@ to be presented with [Deckset](https://www.deckset.com/).
 Run `sbt mdoc` at the root, then use **Deckset** or some other Markdown
 presentation tool to present the generated `target/mdoc/effective-scala.md`.
 
+A PDF of the slides can be found at the repo root [here]() 
+
 ### Resources
 
 This presentation is compiled, and sometimes shamefully copied, from a handful
@@ -24,6 +26,5 @@ of other presentations, books, and notes. They are (in no particular order):
 - [Introduction to Algebraic Data Types in Scala -- Rob Norris](https://tpolecat.github.io/presentations/algebraic_types.html)
 - [Moving Beyond Defensive Coding -- Changlin Li](https://www.youtube.com/watch?v=Csj3lzsr0_I)
 - [Thinking Less with Scala -- Daniel Sivan](https://www.youtube.com/watch?v=k6QRI1a-xNU)
-- [FP to the Max -- John De Goes](https://www.youtube.com/watch?v=sxudIMiOo68)
 - [Benefits of IO? -- Reddit Post](https://www.reddit.com/r/scala/comments/8ygjcq/can_someone_explain_to_me_the_benefits_of_io/)
 - [Error Handling in Scala with FP -- Jun Tomioka](https://speakerdeck.com/jooohn/error-handling-in-scala-with-fp?slide=14)

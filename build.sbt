@@ -1,10 +1,10 @@
 name := "effective-scala"
 
-version := "0.2"
+version := "0.3"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.13.3"
 
-libraryDependencies += "org.typelevel" %% "cats-effect" % "1.1.0"
+libraryDependencies += "org.typelevel" %% "cats-effect" % "2.2.0"
 
 enablePlugins(MdocPlugin)
 

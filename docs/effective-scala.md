@@ -291,7 +291,14 @@ sendReminders1(books)
 # Invalid Data?
 
 ```scala mdoc
-val invalid = LibraryBook(321, None, Some(System.currentTimeMillis()), None) // checkout book with no person?
+// checkout book with no person?
+val invalid = LibraryBook(321, None, Some(System.currentTimeMillis()), None) 
+```
+
+---
+
+# Invalid Data?
+```scala mdoc
 val mixed1 = List(checkedOut, invalid)
 sendReminders1(mixed1)  // silent failure!
 ```
@@ -631,7 +638,7 @@ def delayedIncrement(x: Int): IO[Int] = IO {
 
 # `cats.effect.IO`
 
-```scala mdoc
+```scala mdoc:to-string
 // program 1
 val a = delayedIncrement(5)
 (a, a)
@@ -676,18 +683,18 @@ val b = futureIncrement(5)
 
 # `cats.effect.IO`
 
-```scala mdoc
+```scala mdoc:to-string
 val prog = delayedIncrement(5)
 prog.unsafeRunSync() // "end of the world"
 
-prog.flatMap(delayedIncrement).unsafeRunSync // "end of the world"
+prog.flatMap(delayedIncrement).unsafeRunSync() // "end of the world"
 ```
 
 ---
 
 # `cats.effect.IO`
 
-```scala mdoc
+```scala mdoc:to-string
 def delayedDecrement(x: Int): IO[Int] = IO {
   println(s"Was $x, is now ${x - 1}")
   x - 1
@@ -704,10 +711,10 @@ val program = for {
 
 # `cats.effect.IO`
 
-```scala mdoc
+```scala mdoc:to-string
 program // just a _value_
 
-program.unsafeRunSync // "end of the world"
+program.unsafeRunSync() // "end of the world"
 ```
 
 ---
@@ -751,6 +758,5 @@ References:
 - [Introduction to Algebraic Data Types in Scala -- Rob Norris](https://tpolecat.github.io/presentations/algebraic_types.html)
 - [Moving Beyond Defensive Coding -- Changlin Li](https://www.youtube.com/watch?v=Csj3lzsr0_I)
 - [Thinking Less with Scala -- Daniel Sivan](https://www.youtube.com/watch?v=k6QRI1a-xNU)
-- [FP to the Max -- John De Goes](https://www.youtube.com/watch?v=sxudIMiOo68)
 - [Benefits of IO? -- Reddit Post](https://www.reddit.com/r/scala/comments/8ygjcq/can_someone_explain_to_me_the_benefits_of_io/)
 - [Error Handling in Scala with FP -- Jun Tomioka](https://speakerdeck.com/jooohn/error-handling-in-scala-with-fp?slide=14)
